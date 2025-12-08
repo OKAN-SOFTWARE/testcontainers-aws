@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Manoj Kengudelu", email = "mkengudelu@gmail.com"}
 ]
 keywords = ["testcontainers", "aws", "testing", "localstack", "docker", "s3", "dynamodb", "sqs"]
 classifiers = [
@@ -43,10 +43,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/testcontainers-aws"
-Documentation = "https://github.com/yourusername/testcontainers-aws#readme"
-Repository = "https://github.com/yourusername/testcontainers-aws"
-Issues = "https://github.com/yourusername/testcontainers-aws/issues"
+Homepage = "https://github.com/manojkken/testcontainers-aws"
+Documentation = "https://github.com/manojkken/testcontainers-aws#readme"
+Repository = "https://github.com/manojkken/testcontainers-aws"
+Issues = "https://github.com/manojkken/testcontainers-aws/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -33,12 +33,12 @@ with AWSTestEnvironment(services=['s3', 'dynamodb']) as aws:
 
 ## Features
 
-✅ **Single container orchestration** - Spin up multiple AWS services in one LocalStack container
-✅ **Auto-configured boto3 clients** - No manual endpoint/credential setup
-✅ **Service helper methods** - Create buckets, tables, queues with simple method calls
-✅ **Pytest fixtures** - Ready-to-use fixtures for common testing patterns
-✅ **Resource auto-initialization** - Define resources declaratively, created on startup
-✅ **Automatic cleanup** - Resources cleaned up after tests complete
+- ✅ **Single container orchestration** - Spin up multiple AWS services in one LocalStack container
+- ✅ **Auto-configured boto3 clients** - No manual endpoint/credential setup
+- ✅ **Service helper methods** - Create buckets, tables, queues with simple method calls
+- ✅ **Pytest fixtures** - Ready-to-use fixtures for common testing patterns
+- ✅ **Resource auto-initialization** - Define resources declaratively, created on startup
+- ✅ **Automatic cleanup** - Resources cleaned up after tests complete
 
 ## Installation
 
