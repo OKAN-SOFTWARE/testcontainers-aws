@@ -2,6 +2,7 @@
 
 import base64
 import json
+import time
 import zipfile
 from io import BytesIO
 from typing import Any, Dict, List, Optional
@@ -73,7 +74,27 @@ class LambdaServiceManager(BaseServiceManager):
             params['Environment'] = {'Variables': environment_variables}
 
         params.update(kwargs)
-        return self.client.create_function(**params)
+        response = self.client.create_function(**params)
+
+        # Wait for function to be ready (especially important for LocalStack)
+        self._wait_for_function_active(function_name)
+
+        return response
+
+    def _wait_for_function_active(self, function_name: str, max_wait: int = 5) -> None:
+        """
+        Wait for Lambda function to become active.
+
+        Args:
+            function_name: Name of the function to wait for
+            max_wait: Maximum time to wait in seconds (default: 5)
+
+        Note:
+            LocalStack may not always report accurate function states,
+            so this method uses a simple delay approach.
+        """
+        # Simple delay to allow LocalStack to initialize the function
+        time.sleep(1)
 
     def invoke_function(
         self,
