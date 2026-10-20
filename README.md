@@ -376,10 +376,14 @@ def aws_with_data():
 
 ### Specify LocalStack Version
 
+By default, testcontainers-aws uses LocalStack `4.14`. Starting with `2026.03.0`, LocalStack images
+(including `latest`) require a `LOCALSTACK_AUTH_TOKEN` to start, so `4.14` is the last release that
+works without an account.
+
 ```python
 with AWSTestEnvironment(
     services=['s3'],
-    image_tag='2.3.0'  # Specific LocalStack version
+    image_tag='4.13'  # Specific LocalStack version
 ) as aws:
     # ...
 ```
