@@ -1,7 +1,6 @@
 """Lambda service manager with helper methods."""
 
 import json
-import time
 import zipfile
 from io import BytesIO
 from typing import Any, Dict, List, Optional
@@ -80,20 +79,16 @@ class LambdaServiceManager(BaseServiceManager):
 
         return response
 
-    def _wait_for_function_active(self, function_name: str, max_wait: int = 5) -> None:
+    def _wait_for_function_active(self, function_name: str, max_wait: int = 60) -> None:
         """
         Wait for Lambda function to become active.
 
         Args:
             function_name: Name of the function to wait for
-            max_wait: Maximum time to wait in seconds (default: 5)
-
-        Note:
-            LocalStack may not always report accurate function states,
-            so this method uses a simple delay approach.
+            max_wait: Maximum time to wait in seconds (default: 60)
         """
-        # Simple delay to allow LocalStack to initialize the function
-        time.sleep(1)
+        waiter = self.client.get_waiter('function_active_v2')
+        waiter.wait(FunctionName=function_name, WaiterConfig={'Delay': 1, 'MaxAttempts': max_wait})
 
     def invoke_function(
         self,

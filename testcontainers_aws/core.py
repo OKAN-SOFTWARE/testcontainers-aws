@@ -90,9 +90,14 @@ class AWSTestEnvironment:
             image=f"localstack/localstack:{self.image_tag}"
         )
 
-        # Set services to enable
-        for service in localstack_services:
-            self._container = self._container.with_services(service)
+        # Set services to enable (with_services overwrites SERVICES, so pass them all at once)
+        self._container = self._container.with_services(*localstack_services)
+
+        # LocalStack runs Lambda functions in sibling containers via the host Docker socket
+        if 'lambda' in self.services:
+            self._container = self._container.with_volume_mapping(
+                "/var/run/docker.sock", "/var/run/docker.sock", "rw"
+            )
 
         self._container.start()
 

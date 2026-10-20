@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default LocalStack image is now pinned to `4.14` instead of `latest`. LocalStack `2026.03.0`+
   requires an auth token, which made the previous default hang on startup.
 
+### Fixed
+- Requesting multiple services only enabled the last one (`SERVICES` was overwritten per service)
+- Lambda functions failed to start because the Docker socket wasn't mounted into LocalStack
+- `kinesis.create_stream` and `lambda_.create_function` now wait until the resource is ACTIVE
+  using boto3 waiters (previously no wait / a fixed 1s sleep)
+
 ### Added
 - GitHub Actions CI running ruff and the integration test suite
 - `CONTRIBUTING.md`
