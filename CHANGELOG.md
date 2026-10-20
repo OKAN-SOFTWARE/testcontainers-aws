@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Default LocalStack image is now pinned to `4.14` instead of `latest`. LocalStack `2026.03.0`+
+  requires an auth token, which made the previous default hang on startup.
+
+### Fixed
+- Requesting multiple services only enabled the last one (`SERVICES` was overwritten per service)
+- Lambda functions failed to start because the Docker socket wasn't mounted into LocalStack
+- `kinesis.create_stream` and `lambda_.create_function` now wait until the resource is ACTIVE
+  using boto3 waiters (previously no wait / a fixed 1s sleep)
+
+### Added
+- GitHub Actions CI running ruff and the integration test suite
+- `CONTRIBUTING.md`
+
 ## [0.1.0] - 2024-12-03
 
 ### Added

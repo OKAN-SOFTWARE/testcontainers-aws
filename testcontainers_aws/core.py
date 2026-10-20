@@ -51,7 +51,7 @@ class AWSTestEnvironment:
         self,
         services: Optional[List[str]] = None,
         init_config: Optional[Dict[str, Any]] = None,
-        image_tag: str = "latest",
+        image_tag: str = "4.14",
     ):
         """
         Initialize AWS test environment.
@@ -60,7 +60,8 @@ class AWSTestEnvironment:
             services: List of AWS services to enable (e.g., ['s3', 'dynamodb']).
                      If None, all common services are enabled.
             init_config: Configuration for initializing resources (buckets, tables, etc.)
-            image_tag: LocalStack Docker image tag (default: 'latest')
+            image_tag: LocalStack Docker image tag (default: '4.14', the last release
+                that runs without a LocalStack auth token)
         """
         self.services = services or ['s3', 'dynamodb', 'sqs', 'kinesis']
         self.init_config = init_config or {}
@@ -89,9 +90,14 @@ class AWSTestEnvironment:
             image=f"localstack/localstack:{self.image_tag}"
         )
 
-        # Set services to enable
-        for service in localstack_services:
-            self._container = self._container.with_services(service)
+        # Set services to enable (with_services overwrites SERVICES, so pass them all at once)
+        self._container = self._container.with_services(*localstack_services)
+
+        # LocalStack runs Lambda functions in sibling containers via the host Docker socket
+        if 'lambda' in self.services:
+            self._container = self._container.with_volume_mapping(
+                "/var/run/docker.sock", "/var/run/docker.sock", "rw"
+            )
 
         self._container.start()
 

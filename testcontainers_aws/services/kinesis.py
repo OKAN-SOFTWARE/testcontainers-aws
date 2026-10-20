@@ -31,11 +31,16 @@ class KinesisServiceManager(BaseServiceManager):
         Returns:
             Response from create_stream API
         """
-        return self.client.create_stream(
+        response = self.client.create_stream(
             StreamName=stream_name,
             ShardCount=shard_count,
             **kwargs
         )
+
+        # Streams start in CREATING state and reject writes until ACTIVE
+        self.client.get_waiter('stream_exists').wait(StreamName=stream_name)
+
+        return response
 
     def put_record(
         self,
