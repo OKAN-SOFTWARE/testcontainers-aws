@@ -1,6 +1,5 @@
 """Tests for core AWSTestEnvironment functionality."""
 
-import pytest
 from testcontainers_aws import AWSTestEnvironment
 
 

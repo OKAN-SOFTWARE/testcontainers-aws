@@ -2,6 +2,7 @@
 
 **Simplified AWS service testing with Testcontainers** - Orchestrate LocalStack and AWS services for integration tests with minimal boilerplate.
 
+[![CI](https://github.com/manojkken/testcontainers-aws/actions/workflows/ci.yml/badge.svg)](https://github.com/manojkken/testcontainers-aws/actions/workflows/ci.yml)
 [![PyPI version](https://badge.fury.io/py/testcontainers-aws.svg)](https://badge.fury.io/py/testcontainers-aws)
 [![Python Versions](https://img.shields.io/pypi/pyversions/testcontainers-aws.svg)](https://pypi.org/project/testcontainers-aws/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -487,7 +488,7 @@ def handler(event, context):
 
 ## Contributing
 
-Contributions welcome! Please:
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details. In short:
 
 1. Fork the repository
 2. Create a feature branch
@@ -499,7 +500,7 @@ Contributions welcome! Please:
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/testcontainers-aws.git
+git clone https://github.com/manojkken/testcontainers-aws.git
 cd testcontainers-aws
 
 # Create virtual environment
@@ -532,8 +533,8 @@ Built on top of:
 
 ## Support
 
-- GitHub Issues: [Report bugs or request features](https://github.com/yourusername/testcontainers-aws/issues)
-- Documentation: [Full API documentation](https://github.com/yourusername/testcontainers-aws#readme)
+- GitHub Issues: [Report bugs or request features](https://github.com/manojkken/testcontainers-aws/issues)
+- Documentation: [Full API documentation](https://github.com/manojkken/testcontainers-aws#readme)
 
 ---
 

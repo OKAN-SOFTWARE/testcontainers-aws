@@ -60,7 +60,6 @@ def main():
         print(f"DynamoDB Tables created: {tables}")
 
         # Verify SQS queues
-        sqs = aws.get_sqs_client()
         queues = aws.sqs.list_queues()
         queue_names = [q.split('/')[-1] for q in queues]
         print(f"SQS Queues created: {queue_names}")

@@ -1,6 +1,5 @@
 """Tests for AWS service managers."""
 
-import pytest
 from testcontainers_aws import AWSTestEnvironment
 
 

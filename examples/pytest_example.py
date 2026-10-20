@@ -1,7 +1,7 @@
 """Example pytest tests using testcontainers-aws fixtures."""
 
 import pytest
-from testcontainers_aws.fixtures import aws_environment, s3_bucket, dynamodb_table
+from testcontainers_aws.fixtures import aws_environment, s3_bucket, dynamodb_table  # noqa: F401
 
 
 def test_s3_with_environment(aws_environment):
@@ -74,7 +74,6 @@ def test_multiple_services(aws_environment):
     dynamodb = aws_environment.get_dynamodb_client()
     assert 'records' in dynamodb.list_tables()['TableNames']
 
-    sqs = aws_environment.get_sqs_client()
     messages = aws_environment.sqs.receive_messages(queue_url)
     assert len(messages) == 1
 

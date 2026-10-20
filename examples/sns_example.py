@@ -93,7 +93,7 @@ def main():
             protocol='sqs',
             endpoint=queue2_arn
         )
-        print(f"Subscribed second queue to SNS topic")
+        print("Subscribed second queue to SNS topic")
 
         # List subscriptions
         subscriptions = aws.sns.list_subscriptions_by_topic(topic_arn)

@@ -1,6 +1,6 @@
 """DynamoDB service manager with helper methods."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 from testcontainers_aws.services.base import BaseServiceManager
 
 

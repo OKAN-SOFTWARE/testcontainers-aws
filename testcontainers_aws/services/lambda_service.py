@@ -1,6 +1,5 @@
 """Lambda service manager with helper methods."""
 
-import base64
 import json
 import time
 import zipfile

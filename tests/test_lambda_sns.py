@@ -1,7 +1,6 @@
 """Tests for Lambda and SNS service managers."""
 
 import json
-import pytest
 from testcontainers_aws import AWSTestEnvironment
 from testcontainers_aws.services.lambda_service import create_lambda_zip, create_lambda_zip_from_files
 
