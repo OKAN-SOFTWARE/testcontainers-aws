@@ -1,25 +1,35 @@
 """S3 service manager with helper methods."""
 
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
 from testcontainers_aws.services.base import BaseServiceManager
+
+if TYPE_CHECKING:
+    from types_boto3_s3 import S3Client
+    from types_boto3_s3.type_defs import (
+        CreateBucketOutputTypeDef,
+        GetObjectOutputTypeDef,
+        ListBucketsOutputTypeDef,
+        ObjectIdentifierTypeDef,
+        PutObjectOutputTypeDef,
+    )
 
 
 class S3ServiceManager(BaseServiceManager):
     """Manages S3 operations and simplifies common testing tasks."""
 
     @property
-    def client(self) -> Any:
+    def client(self) -> 'S3Client':
         """Get S3 client."""
         if not self._client:
             self._client = self.environment.get_client('s3')
-        return self._client
+        return cast('S3Client', self._client)
 
     def create_bucket(
         self,
         bucket_name: str,
         region: Optional[str] = None,
-        **kwargs
-    ) -> Dict[str, Any]:
+        **kwargs: Any
+    ) -> 'CreateBucketOutputTypeDef':
         """
         Create an S3 bucket.
 
@@ -31,7 +41,7 @@ class S3ServiceManager(BaseServiceManager):
         Returns:
             Response from create_bucket API
         """
-        create_params = {'Bucket': bucket_name}
+        create_params: Dict[str, Any] = {'Bucket': bucket_name}
 
         if region and region != 'us-east-1':
             create_params['CreateBucketConfiguration'] = {'LocationConstraint': region}
@@ -44,8 +54,8 @@ class S3ServiceManager(BaseServiceManager):
         bucket_name: str,
         key: str,
         body: Any,
-        **kwargs
-    ) -> Dict[str, Any]:
+        **kwargs: Any
+    ) -> 'PutObjectOutputTypeDef':
         """
         Upload an object to S3.
 
@@ -65,7 +75,7 @@ class S3ServiceManager(BaseServiceManager):
             **kwargs
         )
 
-    def get_object(self, bucket_name: str, key: str) -> Dict[str, Any]:
+    def get_object(self, bucket_name: str, key: str) -> 'GetObjectOutputTypeDef':
         """
         Retrieve an object from S3.
 
@@ -78,7 +88,7 @@ class S3ServiceManager(BaseServiceManager):
         """
         return self.client.get_object(Bucket=bucket_name, Key=key)
 
-    def list_buckets(self) -> Dict[str, Any]:
+    def list_buckets(self) -> 'ListBucketsOutputTypeDef':
         """List all S3 buckets."""
         return self.client.list_buckets()
 
@@ -95,7 +105,9 @@ class S3ServiceManager(BaseServiceManager):
             paginator = self.client.get_paginator('list_objects_v2')
             for page in paginator.paginate(Bucket=bucket_name):
                 if 'Contents' in page:
-                    objects = [{'Key': obj['Key']} for obj in page['Contents']]
+                    objects: List['ObjectIdentifierTypeDef'] = [
+                        {'Key': obj['Key']} for obj in page['Contents']
+                    ]
                     self.client.delete_objects(
                         Bucket=bucket_name,
                         Delete={'Objects': objects}
