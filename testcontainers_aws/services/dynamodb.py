@@ -1,18 +1,29 @@
 """DynamoDB service manager with helper methods."""
 
-from typing import Any, Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List, cast
 from testcontainers_aws.services.base import BaseServiceManager
+
+if TYPE_CHECKING:
+    from types_boto3_dynamodb import DynamoDBClient
+    from types_boto3_dynamodb.type_defs import (
+        CreateTableOutputTypeDef,
+        DeleteTableOutputTypeDef,
+        GetItemOutputTypeDef,
+        PutItemOutputTypeDef,
+        QueryOutputTypeDef,
+        ScanOutputTypeDef,
+    )
 
 
 class DynamoDBServiceManager(BaseServiceManager):
     """Manages DynamoDB operations and simplifies common testing tasks."""
 
     @property
-    def client(self) -> Any:
+    def client(self) -> 'DynamoDBClient':
         """Get DynamoDB client."""
         if not self._client:
             self._client = self.environment.get_client('dynamodb')
-        return self._client
+        return cast('DynamoDBClient', self._client)
 
     def create_table(
         self,
@@ -20,8 +31,8 @@ class DynamoDBServiceManager(BaseServiceManager):
         key_schema: List[Dict[str, str]],
         attribute_definitions: List[Dict[str, str]],
         billing_mode: str = 'PAY_PER_REQUEST',
-        **kwargs
-    ) -> Dict[str, Any]:
+        **kwargs: Any
+    ) -> 'CreateTableOutputTypeDef':
         """
         Create a DynamoDB table.
 
@@ -48,7 +59,7 @@ class DynamoDBServiceManager(BaseServiceManager):
             )
             ```
         """
-        params = {
+        params: Dict[str, Any] = {
             'TableName': name,
             'KeySchema': key_schema,
             'AttributeDefinitions': attribute_definitions,
@@ -65,7 +76,9 @@ class DynamoDBServiceManager(BaseServiceManager):
         params.update(kwargs)
         return self.client.create_table(**params)
 
-    def put_item(self, table_name: str, item: Dict[str, Any], **kwargs) -> Dict[str, Any]:
+    def put_item(
+        self, table_name: str, item: Dict[str, Any], **kwargs: Any
+    ) -> 'PutItemOutputTypeDef':
         """
         Put an item into a DynamoDB table.
 
@@ -87,8 +100,8 @@ class DynamoDBServiceManager(BaseServiceManager):
         self,
         table_name: str,
         key: Dict[str, Any],
-        **kwargs
-    ) -> Dict[str, Any]:
+        **kwargs: Any
+    ) -> 'GetItemOutputTypeDef':
         """
         Get an item from a DynamoDB table.
 
@@ -111,8 +124,8 @@ class DynamoDBServiceManager(BaseServiceManager):
         table_name: str,
         key_condition_expression: str,
         expression_attribute_values: Dict[str, Any],
-        **kwargs
-    ) -> Dict[str, Any]:
+        **kwargs: Any
+    ) -> 'QueryOutputTypeDef':
         """
         Query a DynamoDB table.
 
@@ -132,7 +145,7 @@ class DynamoDBServiceManager(BaseServiceManager):
             **kwargs
         )
 
-    def scan(self, table_name: str, **kwargs) -> Dict[str, Any]:
+    def scan(self, table_name: str, **kwargs: Any) -> 'ScanOutputTypeDef':
         """
         Scan a DynamoDB table.
 
@@ -145,7 +158,7 @@ class DynamoDBServiceManager(BaseServiceManager):
         """
         return self.client.scan(TableName=table_name, **kwargs)
 
-    def delete_table(self, table_name: str) -> Dict[str, Any]:
+    def delete_table(self, table_name: str) -> 'DeleteTableOutputTypeDef':
         """
         Delete a DynamoDB table.
 
