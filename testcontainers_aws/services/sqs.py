@@ -1,25 +1,34 @@
 """SQS service manager with helper methods."""
 
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
 from testcontainers_aws.services.base import BaseServiceManager
+
+if TYPE_CHECKING:
+    from types_boto3_sqs import SQSClient
+    from types_boto3_sqs.type_defs import (
+        CreateQueueResultTypeDef,
+        EmptyResponseMetadataTypeDef,
+        MessageTypeDef,
+        SendMessageResultTypeDef,
+    )
 
 
 class SQSServiceManager(BaseServiceManager):
     """Manages SQS operations and simplifies common testing tasks."""
 
     @property
-    def client(self) -> Any:
+    def client(self) -> 'SQSClient':
         """Get SQS client."""
         if not self._client:
             self._client = self.environment.get_client('sqs')
-        return self._client
+        return cast('SQSClient', self._client)
 
     def create_queue(
         self,
         queue_name: str,
         attributes: Optional[Dict[str, str]] = None,
-        **kwargs
-    ) -> Dict[str, Any]:
+        **kwargs: Any
+    ) -> 'CreateQueueResultTypeDef':
         """
         Create an SQS queue.
 
@@ -31,7 +40,7 @@ class SQSServiceManager(BaseServiceManager):
         Returns:
             Response from create_queue API with QueueUrl
         """
-        params = {'QueueName': queue_name}
+        params: Dict[str, Any] = {'QueueName': queue_name}
 
         if attributes:
             params['Attributes'] = attributes
@@ -57,8 +66,8 @@ class SQSServiceManager(BaseServiceManager):
         queue_url: str,
         message_body: str,
         message_attributes: Optional[Dict[str, Any]] = None,
-        **kwargs
-    ) -> Dict[str, Any]:
+        **kwargs: Any
+    ) -> 'SendMessageResultTypeDef':
         """
         Send a message to an SQS queue.
 
@@ -71,7 +80,7 @@ class SQSServiceManager(BaseServiceManager):
         Returns:
             Response from send_message API
         """
-        params = {
+        params: Dict[str, Any] = {
             'QueueUrl': queue_url,
             'MessageBody': message_body,
         }
@@ -87,8 +96,8 @@ class SQSServiceManager(BaseServiceManager):
         queue_url: str,
         max_messages: int = 1,
         wait_time_seconds: int = 0,
-        **kwargs
-    ) -> List[Dict[str, Any]]:
+        **kwargs: Any
+    ) -> List['MessageTypeDef']:
         """
         Receive messages from an SQS queue.
 
@@ -109,7 +118,7 @@ class SQSServiceManager(BaseServiceManager):
         )
         return response.get('Messages', [])
 
-    def delete_message(self, queue_url: str, receipt_handle: str) -> Dict[str, Any]:
+    def delete_message(self, queue_url: str, receipt_handle: str) -> 'EmptyResponseMetadataTypeDef':
         """
         Delete a message from an SQS queue.
 
@@ -125,7 +134,7 @@ class SQSServiceManager(BaseServiceManager):
             ReceiptHandle=receipt_handle
         )
 
-    def purge_queue(self, queue_url: str) -> Dict[str, Any]:
+    def purge_queue(self, queue_url: str) -> 'EmptyResponseMetadataTypeDef':
         """
         Purge all messages from a queue.
 
@@ -137,7 +146,7 @@ class SQSServiceManager(BaseServiceManager):
         """
         return self.client.purge_queue(QueueUrl=queue_url)
 
-    def delete_queue(self, queue_url: str) -> Dict[str, Any]:
+    def delete_queue(self, queue_url: str) -> 'EmptyResponseMetadataTypeDef':
         """
         Delete an SQS queue.
 
@@ -159,7 +168,7 @@ class SQSServiceManager(BaseServiceManager):
         Returns:
             List of queue URLs
         """
-        params = {}
+        params: Dict[str, Any] = {}
         if prefix:
             params['QueueNamePrefix'] = prefix
 
